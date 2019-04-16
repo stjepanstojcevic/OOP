@@ -1,0 +1,131 @@
+#include <iostream>
+//TTTRRREEECCCIII   ZZZAAADDDAAATTTAAAKKK
+struct Node {
+  double value;
+  Node* next;
+
+  Node();
+  Node(double);
+  Node(const Node&);
+  ~Node();
+  void print() const;
+};
+
+Node::Node(): value{0.0}, next{nullptr}{}
+Node::Node(double value): value{value}, next{nullptr}{}
+Node::Node(const Node& n): value{n.value}, next{n.next}{}
+Node::~Node(){
+	std::cout << "Delete node at: " << this << std::endl;
+}
+
+void Node::print() const {
+  std::cout << "Node at: " << this << ", next at: " << next << ", value: " << value << "." << std::endl;
+}
+
+class csll
+{	
+	protected:
+		Node* tail;
+	public:
+  	csll();
+  	csll(const csll&);
+  	~csll();
+	
+ 	bool empty() const;
+	
+  	void prepend(double);
+  	void append(double);	
+	
+  	double removeFromHead();
+
+  	void print() const;
+};	
+	
+csll::csll(): tail{nullptr}{}
+csll::csll(const csll& c): tail{nullptr}{
+	if (!c.empty()){
+		Node* iter = c.tail->next;
+		do {
+			append(iter->value);
+			iter = iter->next;
+		} while (iter != c.tail->next);
+	}
+}
+csll::~csll(){
+	if (!empty()){
+		auto head = tail->next;
+		auto oldStart = head;
+		while (true){
+			auto temp = head->next;
+			delete head;
+			head = temp;
+			if (oldStart == head) break;
+		}
+	}
+}
+
+bool csll::empty() const 
+{
+	return tail == nullptr;
+}
+
+void csll::append(double value){
+	Node* n = new Node{value};
+  	if (empty())
+    	tail = n->next = n;
+  	else 
+	{
+    	n->next = tail->next;
+		tail->next = n;
+		tail = n;
+  	}	
+}
+
+void csll::prepend(double value){
+	Node* n = new Node{value};
+	if (empty())
+		tail = n->next = n;
+	else {
+		n->next = tail->next;
+		tail->next = n;
+	}
+}
+
+double csll::removeFromHead(){
+	Node* n = tail->next;
+	double toBeReturned = n->value;
+	tail->next = n->next;
+	delete n;
+	return toBeReturned;
+}
+
+void csll::print() const {
+	std::cout << "Tail at: " << tail << std::endl;
+	if (!empty()){
+		auto head = tail->next;
+		Node* n = head;
+		do {
+			n->print();
+			n = n->next;
+		} while (n != head);
+	}
+	std::cout << std::endl;
+}
+
+
+
+int main(){
+	csll* L = new csll();
+	L->print();
+ 	double values[] = {59.9, 13.7, 10.0, 98.44, 16.7, 20.269, 1.5};
+	for (auto i: values)
+		L->append(i);
+	L->print();
+
+	csll* copyL = new csll(*L);
+	copyL->print();
+
+	delete L;
+	delete copyL;
+	return 0;
+}
