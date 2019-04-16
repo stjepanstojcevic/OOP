@@ -1,0 +1,137 @@
+#include<iostream>
+using namespace std;
+
+int N = 4;
+int M = 5;
+
+class Robot
+{
+	protected:
+		int _x ;
+		int _y ;
+	public:
+		Robot(int x,int y): _x(x), _y(y){};
+		
+		void Up()
+		{
+			if (_x != 0)
+				_x = _x - 1;
+			else
+				_x = 3;
+		};
+		void Down()
+		{
+			if (_x !=3)
+				_x = _x+1;
+			else
+				_x = 0;
+		};
+		void Left()
+		{
+			if (_y != 0)
+				_y = _y-1;
+			else
+				_y = 4;
+		};
+		void Right()
+		{
+			if (_y != 4)
+				_y = _y+1;
+			else
+				_y = 0;
+		};
+		void PrintMesh()
+		{
+			for(int i = 0;i<N;i++)
+			{
+				for(int j = 0;j<M;j++)
+				{
+					if (i == _x && j == _y)
+						cout<<" x ";
+					else
+						cout<<" 0 ";
+				}
+				cout<<endl;
+			}
+			cout<<endl;
+		};
+		void PrintPath(int a,int b)
+		{
+			while(a != _x)
+			{
+				if (a>_x)
+				{
+					if (a==_x+3)
+					{
+						Up();
+						cout<<" up ";
+					}
+					else 
+					{
+						Down();
+						cout<<" down ";
+					}
+				}
+				else
+				{
+					if (a+3==_x)
+					{
+						Down();
+						cout<<" down ";
+					}
+					else 
+					{
+						Up();
+						cout<<" up ";
+					}
+				}
+			}
+			while(b != _y)
+			{	
+				if (b>_y)
+				{
+					if (_y+2<b)
+					{
+						Left();
+						cout<<" left ";
+					}
+					else 
+					{
+						Right();
+						cout<<" right ";
+					}
+				}
+				else
+				{
+					if (b+2<_y)
+					{
+						Left();
+						cout<<" left ";
+					}
+					else 
+					{
+						Right();
+						cout<<" right ";
+					}
+				}
+			}
+				
+			cout<<endl;
+		}		
+};
+
+int main()
+{
+	Robot Stipa (1,1);
+	
+	Stipa.PrintMesh();
+	
+	for(int i = 0;i<N;i++)
+	{
+		Stipa.PrintPath(i,4);
+	}
+	
+	
+	
+	return 0;
+}
