@@ -1,0 +1,60 @@
+#include<iostream>
+#include<list>
+
+using namespace std;
+
+double najveci(list<double> A)
+{
+	double max = A.front();
+	for(auto it : A)
+	{
+		if (it > max)
+		{
+			max = it; 
+		}
+	}
+	return max;
+}
+
+double najmanji(list<double> A)
+{
+	double min = A.front();
+	for(auto it : A)
+	{
+		if (it < min)
+		{
+			min = it; 
+		}
+	}
+	return min;
+}
+
+double suma(list<double> A)
+{
+	double brojac = 0;
+	for(auto it : A)
+	{
+		brojac += it;
+	}
+	return brojac;
+}
+
+double produkt(list<double> A)
+{
+	double brojac = 1.0;
+	for(auto it : A)
+	{
+		brojac *= it;
+	}
+	return brojac;
+}
+
+int main()
+{
+	list<double> Stipa{1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0};
+	cout<<"Najveci je "<<najveci(Stipa)<<endl;
+	cout<<"Najmanji je "<<najmanji(Stipa)<<endl;
+	cout<<"Suma je "<<suma(Stipa)<<endl;
+	cout<<"Produkt je "<<produkt(Stipa)<<endl;
+	return 0;
+}
