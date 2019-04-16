@@ -1,0 +1,247 @@
+#include <iostream>
+
+#include <iostream>
+
+#ifndef SQUARE_MATRIX
+#define SQUARE_MATRIX
+
+class SquareMatrix {
+public:
+	/*
+	* pokazivaÄŤ na dimaniÄŤki alocirano polje duljine M ÄŤiji su elementi
+	* pokazivaÄŤi na dinamiÄŤki alocirana polja duljine M (retci u matrici)
+	*/
+	double** container;
+	unsigned int M;
+
+	SquareMatrix() = delete;
+	// inicijaliziraj sve Ä‡elije na 0.0
+	SquareMatrix(unsigned int);
+	SquareMatrix(const SquareMatrix&);
+	~SquareMatrix();
+
+	double* operator[](unsigned int);
+	const double* operator[](unsigned int) const;
+
+	SquareMatrix& operator=(const SquareMatrix&);
+	SquareMatrix& operator+=(const SquareMatrix&);
+	SquareMatrix& operator-=(const SquareMatrix&);
+	SquareMatrix& operator*=(const SquareMatrix&);
+
+	// postavi sve Ä‡elije na isti skalar
+	SquareMatrix& operator=(double);
+	//svim Ä‡elijama nadodaj isti skalar
+	SquareMatrix& operator+=(double);
+	// od svih Ä‡elija oduzmi isti skalar
+	SquareMatrix& operator-=(double);
+	// svaku Ä‡eliju pomnoĹľi sa skalarom
+	SquareMatrix& operator*=(double);
+	// svaku Ä‡eliju podijeli sa skalarom
+	SquareMatrix& operator/=(double);
+
+	SquareMatrix operator+(const SquareMatrix&) const;
+	SquareMatrix operator-(const SquareMatrix&) const;
+	SquareMatrix operator*(const SquareMatrix&) const;
+
+	SquareMatrix operator+(double) const;
+	SquareMatrix operator-(double) const;
+	SquareMatrix operator*(double) const;
+	SquareMatrix operator/(double) const;
+
+	bool operator==(const SquareMatrix&) const;
+	bool operator!=(const SquareMatrix&) const;
+};
+
+std::ostream& operator<<(std::ostream&, const SquareMatrix&);
+
+#endif
+
+SquareMatrix::SquareMatrix(unsigned int n): M{n}, container{new double*[n]}{
+	for (int i = 0; i < M; i++)
+		container[i] = new double[n]{};
+}
+
+SquareMatrix::SquareMatrix(const SquareMatrix& A): M{A.M}, container{new double*[A.M]}{
+	for (int i = 0; i < M; i++){
+		container[i] = new double[M];
+		for (int j = 0; j < M; j++)
+			container[i][j] = A.container[i][j];
+	}
+}
+
+SquareMatrix::~SquareMatrix(){
+	for (int i = 0; i < M; i++)
+		delete [] container[i];
+	delete [] container;
+	std::cout << "SquareMatrix deleted" << std::endl;
+}
+
+double* SquareMatrix::operator[](unsigned int pos){return container[pos];}
+const double* SquareMatrix::operator[](unsigned int pos) const {return container[pos];}
+
+
+SquareMatrix& SquareMatrix::operator=(const SquareMatrix& A){
+	for (int i = 0; i < M; i++){
+		for (int j = 0; j < M; j++)
+			container[i][j] = A[i][j];
+	}
+	return *this;
+}
+
+SquareMatrix& SquareMatrix::operator+=(const SquareMatrix& A){
+	for (int i = 0; i < M; i++){
+		for (int j = 0; j < M; j++)
+			container[i][j] += A[i][j];
+	}
+	return *this;
+}
+
+SquareMatrix& SquareMatrix::operator-=(const SquareMatrix& A){
+	for (int i = 0; i < M; i++){
+		for (int j = 0; j < M; j++)
+			container[i][j] -= A[i][j];
+	}
+	return *this;
+}
+
+SquareMatrix& SquareMatrix::operator*=(const SquareMatrix& A){
+	SquareMatrix temp(*this);
+	for (int i = 0; i < M; i++){
+		for (int j = 0; j < M; j++){
+			double rez{0.0};
+			for (int k = 0; k < M; k++)
+				rez += temp[i][k] * A[k][j];
+			container[i][j] = rez;
+		}
+	}
+	return *this;
+}
+
+
+SquareMatrix& SquareMatrix::operator=(double alpha){
+	for (int i = 0; i < M; i++)
+		for (int j = 0; j < M; j++)
+			container[i][j] = alpha;
+
+	return *this;
+}
+
+SquareMatrix& SquareMatrix::operator+=(double alpha){
+	for (int i = 0; i < M; i++)
+		for (int j = 0; j < M; j++)
+			container[i][j] += alpha;
+
+	return *this;
+}
+
+SquareMatrix& SquareMatrix::operator-=(double alpha){
+	for (int i = 0; i < M; i++)
+		for (int j = 0; j < M; j++)
+			container[i][j] -= alpha;
+
+	return *this;
+}
+
+SquareMatrix& SquareMatrix::operator*=(double alpha){
+	for (int i = 0; i < M; i++)
+		for (int j = 0; j < M; j++)
+			container[i][j] *= alpha;
+
+	return *this;
+}
+
+SquareMatrix& SquareMatrix::operator/=(double alpha){
+	for (int i = 0; i < M; i++)
+		for (int j = 0; j < M; j++)
+			container[i][j] /= alpha;
+
+	return *this;
+}
+
+SquareMatrix SquareMatrix::operator+(const SquareMatrix& A) const {
+	SquareMatrix temp(A);
+	temp += *this;
+	return temp;
+}
+
+SquareMatrix SquareMatrix::operator-(const SquareMatrix& A) const {
+	SquareMatrix temp(*this);
+	temp -= A;
+	return temp;
+}
+
+SquareMatrix SquareMatrix::operator*(const SquareMatrix& A) const {
+	SquareMatrix temp(A);
+	temp *= *this;
+	return temp;
+}
+
+
+SquareMatrix SquareMatrix::operator+(double alpha) const {
+	SquareMatrix temp(*this);
+	temp += alpha;
+	return temp;
+}
+
+SquareMatrix SquareMatrix::operator-(double alpha) const {
+	SquareMatrix temp(*this);
+	temp -= alpha;
+	return temp;
+}
+
+SquareMatrix SquareMatrix::operator*(double alpha) const {
+	SquareMatrix temp(*this);
+	temp *= alpha;
+	return temp;
+}
+
+SquareMatrix SquareMatrix::operator/(double alpha) const {
+	SquareMatrix temp(*this);
+	temp /= alpha;
+	return temp;
+}
+
+
+bool SquareMatrix::operator==(const SquareMatrix& A) const {
+	for (int i = 0; i < M; i++)
+		for (int j = 0; j < M; j++)
+			if (container[i][j] != A[i][j]) return false;
+	return true;
+}
+
+bool SquareMatrix::operator!=(const SquareMatrix& A) const {return !(*this == A);}
+
+
+std::ostream& operator<<(std::ostream& os, const SquareMatrix& A){
+	for (int i = 0; i < A.M; i++){
+		for (int j = 0; j < A.M; j++)
+			os << A[i][j] << "\t";
+		os << std::endl;
+	}
+	os << std::endl;
+	return os;
+}
+
+// int main(){}
+
+int main(){
+	const unsigned int n{10};
+
+	SquareMatrix A(n);
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			if (i == j)
+				A[i][j] = (double)i + 1.0;
+
+	SquareMatrix B(n);
+	B = 1.0;
+
+	A += B;
+	std::cout << A << std::endl;
+
+	SquareMatrix C(n);
+	C = A;
+	C /= 10.0;
+
+	return 0;
+}
