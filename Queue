@@ -1,0 +1,101 @@
+#include<iostream>
+ 
+using namespace std;
+ 
+class Queue{
+    protected:
+        unsigned int size, head, tail;
+        int* container;
+    public:
+        Queue() = delete;
+        Queue(unsigned int n) : head(0), tail(0), size(n + 1){
+            container = new int[n + 1];
+        }
+        Queue(const Queue& Q){
+            container = new int[Q.size];
+            size = Q.size;
+            head = Q.head;
+            tail = Q.tail;
+            if(head > tail){
+                for(int i = head; i < tail + size; i++)
+				{
+                    container[i % size] = Q.container[i % size];
+                }
+            }
+            else{
+                for(int i = head; i < tail; i++)
+				{
+                    container[i] = Q.container[i];
+                }
+            }
+        }
+        ~Queue()
+		{
+            delete[] container;
+        }
+       
+        bool empty() const
+		{
+            return head == tail;
+        }
+        bool full() const
+		{
+            return ((tail + 1 ) % size) == head;
+        }
+       
+        void enqueue(int x)
+		{
+            if(!full())
+			{
+                container[tail] = x;
+                tail = (tail + 1) % size;
+            }
+        }
+        int dequeue()
+		{
+            if(!empty())
+			{
+                int val = container[head];
+                head = (head + 1) % size;
+                return val;
+            }
+        }
+       
+        void print(){
+            if(head > tail)
+			{
+                for(int i = head; i < tail + size; i++)
+                    cout << container[i % size] << " ";
+            }
+            else
+			{
+                for(int i = head; i < tail; i++)
+                    cout << container[i] << " ";
+            }
+            cout<<endl;
+        }
+};
+int main(){
+    Queue q(10);
+    q.print();
+    q.enqueue(1);
+    q.print();
+    q.enqueue(2);
+    q.print();
+    q.dequeue();
+    q.print();
+    for(int i = 0; i < 12; i++)
+    {
+        q.enqueue(i);
+        q.print();
+	}
+    q.dequeue();
+    q.print();
+    q.dequeue();
+    q.print();
+    for(int i = 0; i < 3; i++)
+    {
+        q.enqueue(i);
+        q.print();
+    }
+}
