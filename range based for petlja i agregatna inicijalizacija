@@ -1,0 +1,21 @@
+#include <iostream>
+using namespace std;
+int main()
+{
+	int arr[5]{1,2,3,4,5};
+
+	for (auto& el: arr)
+	{
+		cout<<el++<<" ";
+	}
+	
+	cout<<endl;
+
+	for (int el: arr)
+	{
+		cout<<el<<" ";
+	}
+
+	cout<<endl;
+	return 0;
+}
