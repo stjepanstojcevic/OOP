@@ -1,0 +1,128 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <numeric>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+struct Student{
+    int scores[5];
+
+    Student(){};
+
+    void fillScores(int arr[5]){
+        for(int i = 0 ; i<5; i++){scores[i] = arr[i];}
+    };
+
+    int calculateTotalScore() const{
+        return accumulate(scores, scores+5, 0);
+    };
+
+    void print(){
+        for(int i:scores) cout << i << "\t"; 
+    };
+};
+
+
+
+int main(){
+
+    
+    ifstream file("data.txt");
+    
+    vector<int> V;
+
+    int count = 0;
+    int temp;
+    if(file.is_open()){
+        while(!file.eof()){
+            file >> temp;
+
+            V.push_back(temp);
+
+            if(V.size()>1){count++;};
+            /*
+            for(int i = 1; i<V.size(); i++) {
+                cout << V[i] << "\t";
+            }
+            cout << endl;
+            */
+
+        }
+    }
+
+    int** nizovi = new int*[V.front()];
+    for(int i = 0; i<V.front(); i++){
+        nizovi[i] = new int[5];
+    }
+
+
+
+    Student* Students = new Student[V.front()];
+
+    int num_of_students = V.front();
+    
+    V.erase(V.begin()+0);
+
+    //for(auto i:V){cout << i << "\n";}
+
+    int counter = 0;
+    int counter2 = 0;
+    for(auto i:V) {
+        if (counter2!=5){
+            nizovi[counter][counter2] = i;
+            counter2++;
+        }else {
+            counter++;
+            counter2 = 0;
+            nizovi[counter][counter2] = i;
+            counter2++;
+        }
+    }
+
+    /*
+    for(int i = 0; i<3; i++){
+        for(int j = 0; j<5; j++){
+            cout << nizovi[i][j] << "\t";
+        }
+        cout << endl;
+    }*/
+
+
+    for(int i=0; i<num_of_students;i++){
+        Students[i].fillScores(nizovi[i]);
+    }
+
+    /*
+    for(int i = 0; i < num_of_students; i++)
+    {
+        cout << "student " << i+1 << ": \n";
+        Students[i].print();
+        cout << endl;
+    }
+    */
+
+    vector<int> scores;
+    
+    for(int j =0;j<num_of_students; j++){
+        //cout << Students[j].calculateTotalScore() << endl;
+        scores.push_back(Students[j].calculateTotalScore());
+    }
+    /*
+    for(int i = 0; i<num_of_students-1; i++){
+            cout << scores[i] << endl;
+    }*/
+    
+    int boljiOdPere = count_if(scores.begin()+1, scores.end(),[scores](int i){return i>=scores.front();});
+    cout << boljiOdPere;
+   
+    for(int i = 0; i<num_of_students; i++){
+        delete[] nizovi[i];
+    }
+    delete[] nizovi;
+    
+    delete[] Students;
+    file.close();
+}
