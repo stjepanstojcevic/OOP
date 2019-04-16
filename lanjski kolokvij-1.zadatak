@@ -1,0 +1,65 @@
+#include <iostream>
+#include <list>
+#include <utility>
+#include <string>
+using namespace std;
+struct stl
+{
+	list<pair<string, int>> stipa;
+	void push_back(string ime_grada,int broj_stanovnika)
+	{
+		pair<string,int> novi;
+		novi.first = ime_grada;
+		novi.second = broj_stanovnika;	
+		stipa.push_back(novi);
+	}
+	void prosjek()
+	{
+		int brojac = 0;
+		int suma = 0;	
+		for(auto i : stipa)
+		{
+			brojac += 1;
+			suma += i.second;
+		}		
+		cout<<"Prosjecna napucenost je : "<<suma/brojac<<endl;
+	}
+	void najveci()
+	{
+		pair<string , int > max = stipa.front();
+		for(auto i : stipa)
+		{
+			if (i.second > max.second)
+				max = i;
+		}
+		cout<<"Najveci grad je "<<max.first<<" s "<<max.second<<" stanovnika."<<endl;
+	}
+	void print()
+	{
+		for(auto i:stipa)
+			cout<<i.first<<" "<<i.second<<endl;	
+	}
+};
+int main()
+{
+	stl Stips;
+
+	Stips.push_back("Osijek",120000);
+    Stips.push_back("Zagreb",1000000);
+    Stips.push_back("Gospic",35000);
+    Stips.push_back("Bjelovar",10000);
+    Stips.push_back("Daruvar",30000);
+    Stips.push_back("Rijeka",400000);
+    Stips.push_back("Karlovac",90000);
+    Stips.push_back("Split",700000);
+    Stips.push_back("Pozega",26000);
+    Stips.push_back("Zadar",75000);
+    Stips.push_back("Vukovar",60000);
+    Stips.push_back("Vinkovci",50000);
+    
+	Stips.print();
+	Stips.najveci();
+	Stips.prosjek();
+		
+	return 0;
+}
