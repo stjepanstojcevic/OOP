@@ -1,0 +1,167 @@
+#include <iostream>
+//DDDRRRUUUGGGIII   ZZZAAADDDAAATTTAAAKKK
+struct Node {
+	Node* prev;
+	Node* next;
+	double value;
+
+	Node();
+	Node(double);
+	Node(const Node&);
+	// prilikom ÄŤiĹˇÄ‡enja ispisujemo adresu
+	~Node();
+
+	//swap premjeĹˇta sadrĹľaj izmeÄ‘u dva ÄŤvora
+	void swap(Node&);
+	// ispisujemo adresu, adresu prethodnog, adresu sljedeÄ‡eg te vrijednost
+	void print() const;
+};
+
+Node::Node(): prev{}, next{}, value{}{}
+Node::Node(double value): prev{}, next{}, value{value}{}
+Node::Node(const Node& n): prev{n.prev}, next{n.next}, value{n.value}{}
+Node::~Node(){std::cout << "Delete node at: " << this << std::endl;}
+
+void Node::swap(Node& n){
+	double temp{this->value};
+	this->value = n.value;
+	n.value = temp;
+}
+
+void Node::print() const {
+	std::cout << "Node at: " << this << "; prev at: " << prev << "; next at: " << next << "; value: " << value << std::endl;
+}
+
+class CDLL {
+protected:
+	Node* head;
+	Node* tail;
+public:
+	CDLL();
+	CDLL(const CDLL&);
+	~CDLL();
+
+	bool empty() const;
+	// postavi vrijednost na pocetak
+	void prepend(double);
+	// postavi vrijednost na kraj
+	void append(double);
+	// ukloni cvor s pocetka
+	// i vrati njegovu vrijednost
+	double removeFromHead();
+	// ukloni cvor s kraja
+	// i vrati njegovu vrijednost
+	double removeFromTail();
+	// ispisujemo adresu head-a, tail-a te sve cvorove
+	void print() const;
+	void sort();
+};
+
+CDLL::CDLL(): head{}, tail{}{}
+CDLL::CDLL(const CDLL& c): head{}, tail{}{
+	if (!c.empty()){
+		Node* iter = c.head;
+		do {
+			append(iter->value);
+			iter = iter->next;
+		} while (iter != c.head);
+	}
+}
+CDLL::~CDLL(){
+	auto oldHead = head;
+	while (true){
+		auto temp = head->next;
+		delete head;
+		head = temp;
+		if (oldHead == head) break;
+	}
+}
+
+bool CDLL::empty() const {return head == nullptr;}
+
+void CDLL::prepend(double value){
+	Node* n = new Node(value);
+	if (empty())
+		head = tail = n->next = n->prev = n;
+	else {
+		n->next = head;
+		n->prev = tail;
+		head = tail->next = n->next->prev = n;
+	}
+}
+
+void CDLL::append(double value){
+	Node* n = new Node(value);
+	if (empty())
+		head = tail = n->next = n->prev = n;
+	else {
+		n->next = head;
+		n->prev = tail;
+		tail = head->prev = n->prev->next = n;
+	}
+}
+
+double CDLL::removeFromHead(){
+	Node* n = head;
+	double toBeReturned = n->value;
+	head = n->next;
+	head->prev = tail;
+	tail->next = head;
+	delete n;
+	return toBeReturned;
+}
+
+double CDLL::removeFromTail(){
+	Node* n = tail;
+	double toBeReturned = n->value;
+	tail = n->prev;
+	tail->next = head;
+	head->prev = tail;
+	delete n;
+	return toBeReturned;
+}
+
+void CDLL::print() const {
+	std::cout << "Head at: " << head << "; tail at: " << tail << std::endl;
+	if (!empty()){
+		Node* n = head;
+		do {
+			n->print();
+			n = n->next;
+		} while (n != head);
+	}
+	std::cout << std::endl;
+}
+
+// Insertion sort
+void CDLL::sort(){
+	if (!empty()){
+		auto i = head->next;
+		do {
+			auto j = i;
+			while (j != head && j->prev->value > j->value){
+				j->swap(*j->prev);
+				j = j->prev;
+			}
+			i = i->next;
+
+		} while (i != head);
+	}
+}
+
+int main(){
+	CDLL* L = new CDLL();
+	L->print();
+ 	double values[] = {59.9, 13.7, 10.0, 98.44, 16.7, 20.269, 1.5};
+	for (auto i: values)
+		L->append(i);
+	L->print();
+
+	CDLL* copyL = new CDLL(*L);
+	copyL->sort();
+	copyL->print();
+
+	delete L;
+	delete copyL;
+	return 0;
+}
