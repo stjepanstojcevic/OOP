@@ -1,0 +1,73 @@
+#include <iostream>
+using namespace std;
+
+class Stack {
+protected:
+    int top;
+    unsigned int size;
+    int* container;
+public:
+    Stack();
+    Stack(unsigned int);
+    Stack(const Stack&);
+    ~Stack(){delete [] container;};
+
+    bool empty(){top == -1;};
+    bool full(){return (top + 1) == size;}
+;
+
+    void push(int);
+    int pop();
+
+    void print() const;
+};
+
+Stack::Stack(unsigned int size){
+    this->top = -1;
+    this->size = size;
+    this->container = new int [size];
+    cout<<"preopterećeni constructor"<<endl;
+}
+
+Stack::Stack(const Stack& s){
+    this->top = s.top;
+    this->size = s.size;
+    this->container = new int [size];
+    if (!empty())
+	{
+        for(int i = 0; i <= top; i++)
+	        container[i] = s.container[i];
+    }
+
+void push(int x){
+    if (!container.full()){
+        container[++top] = x;
+    }
+}
+
+int Stack::pop(){
+    if (!empty()){
+        return container[top--];
+    }
+}
+
+void print() const {
+    if (!empty()){
+        for(int i = 0; i <= top; i++){
+            cout << container[i] << " ";
+        }
+    }
+    cout << endl;
+}
+
+int main(){
+    Stack a(5);
+    while(!a.full())
+	{
+        a.push(3);
+    }
+    a.pop();
+    a.print();
+
+    return 0;
+}
