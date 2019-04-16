@@ -1,0 +1,172 @@
+#include<iostream>
+
+using namespace std;
+
+class MyVector
+{
+private:
+    unsigned int _size, _capacity;
+    int* P;
+public:
+    MyVector()
+	{
+    _capacity = 1;
+    _size = 0;
+    P = new int[_capacity];
+	};
+    
+	MyVector(MyVector& v)
+	{
+	_capacity = v.capacity();
+    _size = v.size();
+    P = new int[_capacity];
+    for(int i = 0; i<_size; i = i + 1)
+		{
+			P[i] = v.P[i];
+		}
+	};
+
+    ~MyVector()
+	{
+        delete[] P;
+    };
+    
+    void pushBack(int);
+    int popBack();
+    
+    int size() const
+		{ 
+			return _size;
+		}
+	int capacity() const 
+		{
+			return _capacity;
+		}
+    void print();
+    
+    bool empty(); 
+    bool full(); 
+    
+    
+    int& at(unsigned int); 
+    int& front(); 
+    int& back();  
+    
+};
+//______________________________________________________________________________
+int MyVector::popBack()
+{
+    int izbaceni = P[_size-1];
+
+    if(_size != 0)
+	{
+        _size = _size - 1 ;
+        if(_size == _capacity){
+            int* P2 = new int[_capacity];
+        
+            for(int i = 0; i<_size; i++)
+			{
+                P2[i] = P[i];
+            }
+            P2 = P;
+        }
+    }
+    return izbaceni;
+}
+void MyVector::print()
+{
+    for(int i = 0; i!=_size; i=i+1) 
+		{
+			cout << P[i] << " ";	
+		}
+    cout << endl;
+}
+
+void MyVector::pushBack(int x)
+{
+    if(_size!=_capacity)
+	{
+        P[_size] = x;
+        _size = _size + 1;
+    }
+	else 
+	{
+        int *P2 = new int[_capacity*2];
+
+        for(int i = 0; i!=_size; i=i+1) 
+		{
+			P2[i] = P[i];
+		}
+        P2[_size] = x;
+        
+        _size = _size + 1;
+		
+		 _capacity = _capacity * 2;
+
+        P = P2;
+    }
+}
+bool MyVector::empty()
+{
+    if(_size > 0) 
+		{
+			return false;
+		}
+    else 
+		{
+			return true;
+		}
+}
+
+bool MyVector::full() 
+{
+    if(_size == _capacity)
+	{
+		return true;
+	}
+    else
+    {
+		return false;
+	}
+}
+
+int& MyVector::at(unsigned int pos)
+{
+        return P[pos];
+}
+
+int& MyVector::front()
+{
+    return P[0];
+}
+
+int& MyVector::back(){
+    
+    return P[_size-1];
+}
+//______________________________________________________________________________
+int main(){
+
+	MyVector* v = new MyVector();
+   
+   int A[] = {1,2,3,4,5,6,7,8,9,10};
+   for(int i : A)
+    {
+       v -> pushBack(i);
+    };
+
+   v -> print();
+   
+   MyVector* drugiV = new MyVector(*v);
+
+   while(drugiV->empty()==false)
+   {
+       drugiV -> popBack();
+       drugiV -> print();
+   }
+
+   delete v;
+   delete drugiV;
+   
+   return 0;
+}
