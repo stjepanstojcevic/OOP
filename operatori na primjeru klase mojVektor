@@ -1,0 +1,138 @@
+#include<iostream>
+       
+using namespace std;
+class mojVektor {
+public:
+    int *P;
+    int _size;
+    int _capacity;
+public:
+    mojVektor()
+    {  
+        P = nullptr;
+        _size = 0;
+        _capacity = 0;
+    }  
+    mojVektor(int n)
+    {  
+        P = new int[n](); // dynamically allocates and sets values to 0 ---------- agregatna inicijalizacija
+        _capacity = n;
+        _size = 0;
+    }  
+    mojVektor(const mojVektor& v)
+    {  
+        P = new int[v.capacity()]();
+        for (int i=0; i<v.size();i++)
+        {
+            P[i] = v.P[i];
+        }
+        _size = v.size();
+        _capacity = v.capacity();
+    }  
+    ~mojVektor()
+    {  
+        delete [] P;
+    }  
+    void Add(const mojVektor&, const mojVektor&);
+    mojVektor operator+(const mojVektor&) const;
+    void operator=(const mojVektor& v);
+    void print();
+    bool push_back(int);
+    int *search(int);
+    int capacity() const { return _capacity;}
+    int size() const { return _size;}
+};    
+
+mojVektor mojVektor::operator+(const mojVektor& v) const
+{
+    // assume that _capacity == v._capacity
+    mojVektor w(_capacity);
+    w._size = _size > v._size ? _size : v._size;
+    for (int i=0; i < w._size; i++)
+    {
+        w.P[i] = P[i] + v.P[i];
+    }
+
+    return w;
+}
+void mojVektor::Add(const mojVektor& v1, const mojVektor& v2)
+{
+    // delete current mojVector content
+    if (P!=0) delete [] P;
+    _size = 0;
+    _capacity = 0;
+
+    // we will assume that v1._capacity == v2._capacity
+    P = new int[v1._capacity]();
+    _capacity = v1._capacity;
+    _size = v1._size > v2._size ? v1._size : v2._size;
+    for (int i=0; i < _size; i++)
+    {
+        P[i] = v1.P[i] + v2.P[i];
+    }
+}
+void mojVektor::operator=(const mojVektor& v)
+{
+    // delete current mojVector content
+    if (P!=NULL) delete [] P;
+    _size = 0;
+    _capacity = 0;
+    // iskopiraj v u trenutni vektor
+    P = new int[v._capacity];
+    _capacity = v._capacity;
+    _size = v._size;
+    for (int i=0;i<_size;i++)
+        P[i] = v.P[i];
+}
+
+void mojVektor::print()
+{
+    for (int i=0;i<_size; i++)
+        cout << P[i] << " ";
+    cout << endl;
+}
+bool mojVektor::push_back(int x)
+{
+    if (_size < _capacity)
+    {
+        P[_size] = x;
+        _size++;
+        return true;
+    }else
+    {
+        return false;
+    }
+}
+int* mojVektor::search(int x)
+{
+    for (int i=0; i<_size; i++)
+        if (P[i] == x)
+            return &P[i];
+
+    return NULL;
+}
+int main()
+{
+    mojVektor v(6);
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
+    v.push_back(4);
+    v.print();
+
+    mojVektor v1 = v; // copy-constructor called!
+    mojVektor v2;
+    v2 = v;  // assignment operator called
+    mojVektor v3;
+    v1.push_back(5);
+    v1.print();
+
+    v3.Add(v, v1);
+    v3.print();
+
+    mojVektor v4 = v + v1;
+    v4.print();
+    return 0;
+}
+
+ 
