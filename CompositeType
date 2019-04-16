@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+
+struct CompositeType
+{
+	int A[10];
+	CompositeType()
+	{
+		for(int& x :A)
+			x = 0;	
+		cout<<"default constructor"<<endl;
+	}
+	CompositeType(const CompositeType& temp)
+	{
+		cout<<"copy constructor"<<endl;
+		int i  = 0;
+		for(int x : temp.A)
+		{
+			A[i++] = x;
+		}
+	}
+	
+	void print()
+	{
+		for(int x : A)
+		{
+			cout<<x<<" ";
+		}
+		cout<<endl;
+	}	
+	
+	~CompositeType()
+	{
+		cout<<"destructor"<<endl;
+	}
+			
+};
+
+int main()
+{
+	CompositeType p;
+	
+	p.A[3] = 7;
+	p.A[9] = 2;
+	
+	p.print();
+	CompositeType p2 = p;
+	p2.print();
+	
+	return 0;
+}
