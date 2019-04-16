@@ -1,0 +1,68 @@
+#include <iostream>
+
+#ifndef MAP
+#define MAP
+
+#include <vector>
+using namespace std;
+
+template <typename K, typename V>
+class Map {
+private:
+	vector<pair<K, V>> container;
+public:
+	Map();
+	Map(const Map<K, V>&);
+	~Map() = default;
+
+	V& operator[](const K&);
+
+	pair<K, V>* begin();
+	pair<K, V>* end();
+};
+
+
+template <typename K, typename V>
+Map<K, V>::Map(): container{vector<pair<K, V>> {}} {}
+
+template <typename K, typename V>
+Map<K, V>::Map(const Map<K, V>& m): container{m.container} {}
+
+template <typename K, typename V>
+V& Map<K, V>::operator[](const K& key) {
+	for (auto& el : container){
+		if (el.first == key)
+			return el.second;
+	}
+	V value{};
+	container.push_back(make_pair(key, value));
+	return container.back().second;
+}
+
+template <typename K, typename V>
+pair<K, V>* Map<K, V>::begin() {return &(container.front());}
+
+template <typename K, typename V>
+pair<K, V>* Map<K, V>::end() {return &(container.back())+1;}
+
+
+#endif
+
+
+// goes through the string and matches letters with how many times they appeared
+void split_str(Map<char, unsigned int>& m, const string& s){
+	for (const auto letter : s)
+		m[letter]++;
+}
+
+int main(){
+	Map<char, unsigned int> m{};
+	string word = "abeceda";
+
+	split_str(m, word);
+
+	for (auto freq: m)
+		std::cout << "Frequency of " << freq.first << " is: " << freq.second << std::endl;
+	std::cout << std::endl;
+
+}
