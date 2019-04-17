@@ -1,0 +1,110 @@
+#include<iostream>
+using namespace std;
+class Node
+{
+public:
+    int n;
+    Node* next;
+    Node(int n, Node* N): n(n), next(N){}
+};
+
+class List
+{
+protected:
+    Node* head{}; // immediately set pointer to nullptr
+public:
+    List(){}
+    void push_front(int);
+    void display();
+    Node* search(int);
+    bool erase(int);
+    ~List();
+};
+
+bool List::erase(int x)
+{
+    Node * iter = head;
+    Node * prev = head;
+    while(iter != nullptr)
+    {
+        if (iter->n == x)
+        {
+            // bridge over the node for deletion and delete it
+            if (iter == head)
+                head = iter->next; // special case when x is first node in the list
+            else
+                prev->next = iter->next;
+
+            delete iter;
+            return true;
+        }
+        prev = iter;
+        iter = iter -> next;
+
+    }
+    return false;
+}
+
+Node* List::search(int x)
+{
+    Node * iter = head;
+    while (iter != nullptr)
+    {
+        if (iter->n == x)
+            return iter;
+        iter = iter-> next;
+    }
+    return nullptr;
+}
+
+void List::push_front(int x)
+{
+    Node *n = new Node(x, head);
+    head = n;
+}
+
+void List::display()
+{
+    Node* iter = head;
+    while (iter != nullptr)
+    {
+        cout << iter->n << "|" << iter->next << " -- > ";
+        iter = iter->next;
+    }
+    cout << " null " << endl;
+}
+
+List::~List()
+{
+    cout << "~List() destroys the List object!" << endl;
+    Node * iter = head;
+    Node * forDelete;
+    while(iter != nullptr)
+    {
+        forDelete = iter;
+        iter = iter->next;
+        delete forDelete;
+    }
+};
+
+
+int main()
+{
+    List L;
+    L.push_front(2);
+    L.push_front(-1);
+    L.push_front(7);
+    L.push_front(4);
+
+    L.display();
+
+    if (L.search(-4) != nullptr)
+        cout << "Data found" << endl;
+    else
+        cout << "Not found" << endl;
+
+
+    cout << L.erase(2) << endl;
+    L.display();
+    return 0;
+}
